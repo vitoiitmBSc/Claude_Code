@@ -11,3 +11,6 @@ lxml>=4.9.0
 
 # HTTP adapter with retry logic
 urllib3>=2.0.0
+
+# Web framework
+Flask>=3.0.0
