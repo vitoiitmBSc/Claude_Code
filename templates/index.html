@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Selector - Find the Perfect Material</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h2::before {
+            content: '▶';
+            margin-right: 10px;
+            color: #764ba2;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .characteristics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .characteristic-tag {
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .characteristic-tag button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .add-characteristic {
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-characteristic input {
+            flex: 1;
+        }
+
+        .add-characteristic button {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .add-characteristic button:hover {
+            background: #5568d3;
+        }
+
+        .property-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .property-input {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .property-input h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .range-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .range-inputs input {
+            flex: 1;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .results-header h2 {
+            color: white;
+        }
+
+        .results-header h2::before {
+            content: '✓';
+            margin-right: 10px;
+        }
+
+        .material-card {
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .material-card:last-child {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .material-card:hover {
+            background-color: #f9f9f9;
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .material-name {
+            flex: 1;
+        }
+
+        .material-name h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .material-name .source {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .material-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .material-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-section {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .detail-section h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            font-size: 0.85em;
+        }
+
+        .detail-section li {
+            padding: 3px 0;
+            color: #555;
+        }
+
+        .material-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .material-link:hover {
+            background: #5568d3;
+        }
+
+        .error-message {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .property-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Material Selector</h1>
+            <p>Find the perfect material for your application</p>
+        </header>
+
+        <div class="main-content">
+            <form id="materialForm">
+                <!-- Application Section -->
+                <div class="form-section">
+                    <h2>Application</h2>
+                    <div class="form-group">
+                        <label for="application">What is your intended application?</label>
+                        <input type="text" id="application" name="application"
+                               placeholder="e.g., aerospace components, marine environment, high-temperature applications">
+                    </div>
+                </div>
+
+                <!-- Material Type Section -->
+                <div class="form-section">
+                    <h2>Material Type (Optional)</h2>
+                    <div class="form-group">
+                        <label for="materialType">Preferred material type or family</label>
+                        <input type="text" id="materialType" name="materialType"
+                               placeholder="e.g., stainless steel, aluminum alloy, titanium, polymer">
+                    </div>
+                </div>
+
+                <!-- Characteristics Section -->
+                <div class="form-section">
+                    <h2>Required Characteristics</h2>
+                    <div class="form-group">
+                        <label>Add key characteristics (e.g., corrosion resistance, lightweight, high strength)</label>
+                        <div class="add-characteristic">
+                            <input type="text" id="characteristicInput" placeholder="Enter a characteristic">
+                            <button type="button" onclick="addCharacteristic()">Add</button>
+                        </div>
+                        <div class="characteristics-container" id="characteristicsList"></div>
+                    </div>
+                </div>
+
+                <!-- Properties Section -->
+                <div class="form-section">
+                    <h2>Specific Property Requirements (Optional)</h2>
+                    <div class="property-inputs">
+                        <div class="property-input">
+                            <h4>Tensile Strength (MPa)</h4>
+                            <div class="range-inputs">
+                                <input type="number" id="tensileMin" placeholder="Min" step="0.1">
+                                <span>to</span>
+                                <input type="number" id="tensileMax" placeholder="Max" step="0.1">
+                            </div>
+                        </div>
+                        <div class="property-input">
+                            <h4>Density (g/cm³)</h4>
+                            <div class="range-inputs">
+                                <input type="number" id="densityMin" placeholder="Min" step="0.01">
+                                <span>to</span>
+                                <input type="number" id="densityMax" placeholder="Max" step="0.01">
+                            </div>
+                        </div>
+                        <div class="property-input">
+                            <h4>Operating Temperature (°C)</h4>
+                            <div class="range-inputs">
+                                <input type="number" id="tempMin" placeholder="Min">
+                                <span>to</span>
+                                <input type="number" id="tempMax" placeholder="Max">
+                            </div>
+                        </div>
+                        <div class="property-input">
+                            <h4>Hardness (HRC/HB)</h4>
+                            <div class="range-inputs">
+                                <input type="number" id="hardnessMin" placeholder="Min">
+                                <span>to</span>
+                                <input type="number" id="hardnessMax" placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="searchBtn">Find Materials</button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Searching databases and evaluating materials...</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="results" id="results">
+                <div class="results-header">
+                    <h2>Top Material Recommendations</h2>
+                    <p id="resultsCount"></p>
+                </div>
+                <div id="materialsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let characteristics = [];
+
+        function addCharacteristic() {
+            const input = document.getElementById('characteristicInput');
+            const value = input.value.trim();
+
+            if (value && !characteristics.includes(value)) {
+                characteristics.push(value);
+                updateCharacteristicsList();
+                input.value = '';
+            }
+        }
+
+        function removeCharacteristic(index) {
+            characteristics.splice(index, 1);
+            updateCharacteristicsList();
+        }
+
+        function updateCharacteristicsList() {
+            const container = document.getElementById('characteristicsList');
+            container.innerHTML = characteristics.map((char, index) => `
+                <div class="characteristic-tag">
+                    <span>${char}</span>
+                    <button type="button" onclick="removeCharacteristic(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Allow Enter key to add characteristic
+        document.getElementById('characteristicInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCharacteristic();
+            }
+        });
+
+        // Form submission
+        document.getElementById('materialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = {
+                application: document.getElementById('application').value.trim(),
+                material_type: document.getElementById('materialType').value.trim(),
+                characteristics: characteristics,
+                properties: {}
+            };
+
+            // Collect property requirements
+            const tensileMin = document.getElementById('tensileMin').value;
+            const tensileMax = document.getElementById('tensileMax').value;
+            if (tensileMin || tensileMax) {
+                formData.properties['tensile_strength'] = {};
+                if (tensileMin) formData.properties['tensile_strength'].min = parseFloat(tensileMin);
+                if (tensileMax) formData.properties['tensile_strength'].max = parseFloat(tensileMax);
+            }
+
+            const densityMin = document.getElementById('densityMin').value;
+            const densityMax = document.getElementById('densityMax').value;
+            if (densityMin || densityMax) {
+                formData.properties['density'] = {};
+                if (densityMin) formData.properties['density'].min = parseFloat(densityMin);
+                if (densityMax) formData.properties['density'].max = parseFloat(densityMax);
+            }
+
+            const tempMin = document.getElementById('tempMin').value;
+            const tempMax = document.getElementById('tempMax').value;
+            if (tempMin || tempMax) {
+                formData.properties['temperature'] = {};
+                if (tempMin) formData.properties['temperature'].min = parseFloat(tempMin);
+                if (tempMax) formData.properties['temperature'].max = parseFloat(tempMax);
+            }
+
+            const hardnessMin = document.getElementById('hardnessMin').value;
+            const hardnessMax = document.getElementById('hardnessMax').value;
+            if (hardnessMin || hardnessMax) {
+                formData.properties['hardness'] = {};
+                if (hardnessMin) formData.properties['hardness'].min = parseFloat(hardnessMin);
+                if (hardnessMax) formData.properties['hardness'].max = parseFloat(hardnessMax);
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('searchBtn').disabled = true;
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayResults(data.materials, data.total_found);
+                } else {
+                    showError(data.error || 'An error occurred while searching');
+                }
+            } catch (error) {
+                showError('Failed to connect to the server. Please try again.');
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('searchBtn').disabled = false;
+            }
+        });
+
+        function displayResults(materials, total) {
+            const resultsCount = document.getElementById('resultsCount');
+            const materialsList = document.getElementById('materialsList');
+
+            resultsCount.textContent = `Found ${total} material${total !== 1 ? 's' : ''} matching your requirements`;
+
+            materialsList.innerHTML = materials.map((material, index) => `
+                <div class="material-card">
+                    <div class="material-header">
+                        <div class="material-name">
+                            <h3>${index + 1}. ${material.name}</h3>
+                            <p class="source">Source: ${material.source}</p>
+                        </div>
+                        <div class="score-badge">
+                            ${material.score}% Match
+                        </div>
+                    </div>
+                    <p class="material-description">${material.description || 'No description available'}</p>
+                    <div class="material-details">
+                        ${material.applications && material.applications.length > 0 ? `
+                            <div class="detail-section">
+                                <h4>Applications</h4>
+                                <ul>
+                                    ${material.applications.slice(0, 3).map(app => `<li>• ${app}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        ${material.key_properties && material.key_properties.length > 0 ? `
+                            <div class="detail-section">
+                                <h4>Key Properties</h4>
+                                <ul>
+                                    ${material.key_properties.slice(0, 3).map(prop => `<li>• ${prop}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        ${Object.keys(material.properties.mechanical || {}).length > 0 ? `
+                            <div class="detail-section">
+                                <h4>Mechanical Properties</h4>
+                                <ul>
+                                    ${Object.entries(material.properties.mechanical).slice(0, 3).map(([key, val]) =>
+                                        `<li>${key}: ${val}</li>`
+                                    ).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <a href="${material.url}" target="_blank" class="material-link">View Full Details →</a>
+                </div>
+            `).join('');
+
+            document.getElementById('results').classList.add('active');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('active');
+        }
+    </script>
+</body>
+</html>

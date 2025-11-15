@@ -1,9 +1,11 @@
-# Material Properties Web Scraper
+# Material Properties Web Scraper & Selector
 
-A comprehensive Python tool for fetching material properties from professional databases including MatWeb, AZoM, and other materials science resources.
+A comprehensive Python tool for fetching material properties from professional databases including MatWeb, AZoM, and other materials science resources. Now featuring an intelligent web interface for material selection based on your requirements!
 
 ## Features
 
+- **Web Interface**: User-friendly web application for material selection
+- **Intelligent Material Evaluation**: AI-powered ranking based on your requirements
 - **Multiple Database Support**: Search across MatWeb, AZoM, and more
 - **Comprehensive Property Extraction**: Physical, mechanical, thermal, electrical properties
 - **Application-Based Search**: Find materials suitable for specific applications
@@ -52,6 +54,38 @@ A comprehensive Python tool for fetching material properties from professional d
    ```
 
 ## Usage
+
+### Web Interface (Recommended for Material Selection)
+
+The easiest way to find materials is using the web interface:
+
+1. **Start the web application**:
+   ```bash
+   python app.py
+   ```
+
+2. **Open your browser** and go to:
+   ```
+   http://localhost:5000
+   ```
+
+3. **Enter your requirements**:
+   - Describe your application (e.g., "aerospace components", "marine environment")
+   - Specify material type if preferred (e.g., "aluminum alloy", "stainless steel")
+   - Add required characteristics (e.g., "corrosion resistant", "lightweight")
+   - Set property ranges if needed (tensile strength, density, temperature, hardness)
+
+4. **Get results**:
+   - Materials are automatically ranked by how well they match your requirements
+   - View detailed properties, applications, and specifications
+   - Each material gets a match score (0-100%)
+   - Click through to see full database entries
+
+**Example Use Case**:
+- Application: "high-temperature aerospace component"
+- Characteristics: ["lightweight", "oxidation resistant", "high strength"]
+- Temperature Range: 500-1000°C
+- The system will search databases, evaluate materials, and return ranked results!
 
 ### Command Line Interface
 
@@ -283,9 +317,14 @@ Claude_Code/
 │   ├── utils/
 │   │   ├── parser.py            # HTML parsing utilities
 │   │   └── export.py            # Export utilities
-│   └── material_scraper.py      # Main CLI tool
+│   ├── material_scraper.py      # Main CLI tool
+│   └── material_evaluator.py    # Material evaluation engine
+├── templates/
+│   ├── index.html               # Web interface
+│   └── about.html               # About page
 ├── examples/
 │   └── usage_examples.py        # Usage examples
+├── app.py                       # Flask web application
 ├── requirements.txt             # Dependencies
 ├── README.md                    # This file
 └── CLAUDE.md                    # AI assistant guide
@@ -371,13 +410,13 @@ The scrapers implement respectful rate limiting and identify themselves with a p
 
 Planned features:
 - [ ] Support for more databases (Total Materia, ASM)
-- [ ] Advanced filtering by property ranges
 - [ ] Graphical comparison of materials
 - [ ] Database caching for offline access
-- [ ] Material recommendation engine
 - [ ] Integration with CAD/FEA software
 - [ ] RESTful API interface
-- [ ] Web interface
+- [x] Web interface
+- [x] Advanced filtering by property ranges
+- [x] Material recommendation engine
 
 ## Support
 

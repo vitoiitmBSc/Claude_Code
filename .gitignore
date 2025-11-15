@@ -45,6 +45,7 @@ output/
 !README.md
 !CLAUDE.md
 !QUICKSTART.md
+!WEB_INTERFACE_GUIDE.md
 
 # Logs
 *.log
